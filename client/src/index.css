@@ -14,154 +14,176 @@ body {
 #root {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
 }
 .App {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
-}
-nav {
-  width: 100%;
-  height: 3rem;
-  color: white;
-  position: fixed;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1rem;
-  z-index: 10;
-}
-.logoTitle {
-  font-size: 1.3rem;
-  font-weight: 400;
-}
-.userControls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.loginBtn {
-  margin-right: 1rem;
-}
-.menuIcon {
-  font-size: 1.5rem;
-}
-.menuContent {
-  position: absolute;
-  top: 3rem;
-  left: 0;
-  width: 100%;
-  background-color: rgb(56, 56, 56);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem 0;
-}
-.menuList {
-  width: 100%;
-  list-style-type: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.menulist li {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.loginBtnMobile {
-  margin-bottom: 1rem;
 }
 header {
   width: 100%;
   height: 100%;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   position: relative;
 }
-.overlay {
+.blackOverlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9;
   background-color: rgba(0, 0, 0, 0.8);
+  z-index: -1;
 }
-header img {
+.headerBg {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   height: 100%;
+  width: 100%;
   object-fit: cover;
+  z-index: -2;
 }
-header h1 {
-  z-index: 9;
-  max-width: 15rem;
-  font-weight: 500;
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-header form {
-  width: 100%;
-  z-index: 9;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.searchByIngredientLabel {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-.searchBarContainer {
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 0.5rem;
-  height: 2.5rem;
-  width: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 0.5rem;
-}
-.searchIcon {
-  font-size: 1.55rem;
-  margin-right: 0.5rem;
-  color: #111;
-}
-.searchInput:focus {
-  outline: none;
-}
-.searchInput {
+.headerContent {
+  position: absolute;
+  top: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
-  border: none;
-  background: transparent;
-  font-size: 1.4rem;
-  color: #111;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: white;
 }
-.searchInput::placeholder {
-  color: #111;
-}
-.popularPicks {
+nav {
   width: 100%;
-  padding: 1rem;
+  height: 3rem;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid white;
+}
+.logoText {
+  font-weight: 500;
+  font-family: 'Dancing Script', cursive;
+}
+.logoText, .hamburgerIcon {
+  font-size: clamp(1rem, 2vw, 2rem);
+}
+.navbarList {
+  list-style-type: none;
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  width: 100%;
+  z-index: -1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: transparent;
+  opacity: 0;
+  transform: translateY(-9rem);
+  transition: opacity 300ms ease-in-out 300ms, transform 500ms ease-in-out;
 }
-
-
-.tablet,
+.navbarList.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.navbarList li {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-weight: 400;
+  transition: color 300ms ease-in-out, font-weight 300ms ease-in-out;
+}
+.navbarList li:hover {
+  color: rgb(120, 141, 162);
+  font-weight: 600;
+}
+.navbarList.mobile .loginBtn {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+}
+.navbarList.mobile .registerBtn {
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+}
+.wlcmMsg {
+  margin-top: 25vh;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.5rem, 5vw, 6rem);
+}
+.clock {
+  margin-top: 5vh;
+  font-size: clamp(1rem, 2vw, 2rem);
+}
+.getRandom {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1rem, 2vw, 2rem);
+  margin-top: 5vh;
+}
+.findMeal {
+  margin-top: 1rem;
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: clamp(.5rem, 2vw, 1rem);
+  border-radius: .7rem;
+  font-size: clamp(1rem, 2vw, 2rem);
+  cursor: pointer;
+  transition: border 200ms ease-in-out, color 400ms linear, background 400ms linear;
+}
+.findMeal:hover {
+  border-radius: .2rem;
+  color: black;
+  background-color: white;
+}
 .desktop {
   display: none;
+}
+@media screen and (min-width: 700px) {
+  .mobile {
+    display: none;
+  }
+  .desktop {
+    display: block;
+  }
+  .logoText {
+    font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+  }
+  nav {
+    max-width: 90rem;
+    border: none;
+  }
+  .navbarLinks {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .navbarLinks li {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    cursor: pointer;
+    padding: 1.4rem 0;
+  }
+  .loginLink {
+    margin-right: 1rem;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .clock {
+    margin-top: 10vh;
+  }
+  .getRandom {
+    margin-top: 10vh;
+  }
+  .findMeal {
+    margin-top: 1.5rem;
+  }
 }
