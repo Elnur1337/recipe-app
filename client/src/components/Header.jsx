@@ -29,7 +29,7 @@ const Header = () => {
         <header>
             <div className="blackOverlay"></div>
             <Suspense>
-                {window.innerWidth >= 700 ? <HeaderDesktop/>: <HeaderMobile/>}
+                {window.innerWidth >= 700 ? <HeaderDesktop/> : <HeaderMobile/>}
             </Suspense>
             <div className='headerContent'>
                 <Navbar/>
