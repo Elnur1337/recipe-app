@@ -14,7 +14,7 @@ const RandomPicks = () => {
         const local = JSON.parse(localStorage.getItem('random'));
         if (!local) {
             const getRandom = () => {
-                Axios.get(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10`)
+                Axios.get(`https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=5`)
                 .then((res) => {
                     setData(res.data.recipes);
                     localStorage.setItem('random', JSON.stringify(res.data.recipes));
@@ -24,12 +24,10 @@ const RandomPicks = () => {
         } else {
             setData(local);
         }
-        console.log(data);
     }, []);
-
     return (
         <section className="randomPicks">
-            <h2>Our popular picks</h2>
+            <h2 className="randomPicksTitle">Our popular picks</h2>
             <div className="cardsContainer">
                 {data.map((recipe) => {
                     return <RecipeCard key={recipe.id} recipeData={recipe}/>

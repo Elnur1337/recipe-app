@@ -4,6 +4,9 @@
   box-sizing: border-box;
   font-family: 'Ubuntu', sans-serif;
 }
+a {
+  text-decoration: none;
+}
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -136,19 +139,125 @@ nav {
 }
 .findMeal:hover {
   border-radius: .2rem;
-  color: black;
+  color: #222;
   background-color: white;
 }
-.desktop {
-  display: none;
+.randomPicks {
+  width: 100%;
+  padding: 2rem 1rem;
+  margin: 0 auto;
 }
-.splide ul {
-  list-style-type: none;
+.randomPicksTitle {
+  color: #222;
+  text-align: center;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.5rem, 3vw, 3.5rem);
+  margin-bottom: 2rem;
 }
-.splide__list {
+.cardsContainer {
+  width: 100%;
+  display: grid;
+  gap: 1.3rem;
+  grid-template-columns: repeat(auto-fit, minmax(max(15rem), 1fr));
+  grid-auto-rows: auto;
+}
+.recipeCard {
+  width: 100%;
+  height: 26rem;
+  border-radius: .5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  position: relative;
+}
+.recipeCard img {
+  width: 100%;
+  height: 50%;
+  object-fit: cover;
+  border-radius: .5rem .5rem 0 0;
+}
+.recipeCard .infoContainer {
+  padding: .5rem;
+}
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.infoContainer a {
+  color: #222;
+}
+.infoContainer h4 {
+  margin-bottom: 1rem;
+}
+.recipeSummary {
+  margin-bottom: .7rem;
+}
+.readMoreBtn {
+  width: 7rem;
+  padding: .4rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  background-color: rgb(229, 229, 229);
+  margin-bottom: 1rem;
+}
+.readMoreBtn:active {
+  transform: scale(0.98);
+}
+.cardFooter {
+  width: calc(100% - .7rem);
+  align-self: flex-end;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  bottom: .5rem;
+  left: .5rem;
+
+}
+.readyInMinutes {
+  display: flex;
+  align-items: center;
+  color: #222;
+}
+.clockIcon {
+  font-size: 1.8rem;
+  color: #222;
+  margin-right: .3rem;
+}
+.isSavedIcon {
+  font-size: 1.8rem;
+  color: #222;
+  cursor: pointer;
+}
+.byIngredientsSection {
+  width: 100vw;
+  height: 100vh;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-image: linear-gradient(90deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.8) 100%),
+    url(./assets/byIngredientsMobileBg.jpg);
+  /* Photo by Karolina Grabowska: https: //www.pexels.com/photo/composition-of-fresh-ingredients-for-healthy-breakfast-4021695/ */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+.byIngredientsSection h2 {
+  font-weight: 400;
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(2rem, 3vw, 3.5rem);
+  
+}
+.desktop {
+  display: none;
 }
 @media screen and (min-width: 700px) {
   .mobile {
@@ -182,6 +291,25 @@ nav {
   }
   .loginLink {
     margin-right: 1rem;
+  }
+  .randomPicks {
+    max-width: 100rem;
+  }
+  .recipeCard {
+    transition: transform 300ms ease-in-out;
+  }
+  .recipeCard:hover {
+    transform: scale(1.1);
+  }
+  .byIngredientsSection {
+    background-image: linear-gradient(90deg,
+        rgba(0, 0, 0, 0.8) 0%,
+        rgba(0, 0, 0, 0.8) 100%),
+      url(./assets/byIngredientsDesktopBg.jpg);
+    /* Photo by Engin Akyurt: https: //www.pexels.com/photo/assorted-spices-on-black-frying-pan-1435910/ */;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
   }
 }
 @media screen and (min-width: 1000px) {
