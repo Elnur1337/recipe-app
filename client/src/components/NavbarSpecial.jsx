@@ -4,21 +4,21 @@ import { Link } from 'react-router-dom';
 //Icons
 import { FaBars } from 'react-icons/fa';
 
-const Navbar = () => {
+const NavbarSpecial = () => {
     const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
     return (
         <nav>
-            <Link to={'/'} className="logoText">Your Next Meal</Link>
+            <Link to={'/'} className="logoText" style={{color: 'black'}}>Your Next Meal</Link>
             <ul className={`navbarList mobile ${isMobileMenuActive && 'active'}`}> 
-                <li className='loginBtn'>Login</li>
-                <li className='registerBtn'>Register</li>
+                <li className='loginBtn' style={{color: 'black'}}>Login</li>
+                <li className='registerBtn' style={{color: 'black'}}>Register</li>
             </ul>
             <ul className='navbarLinks desktop'>
-                <li className='loginLink'>Login</li>
-                <li className='registerLink'>Register</li>
+                <li className='loginLink' style={{color: 'black'}}>Login</li>
+                <li className='registerLink' style={{color: 'black'}}>Register</li>
             </ul>
             <FaBars className='hamburgerIcon mobile' onClick={() => setIsMobileMenuActive(!isMobileMenuActive)}/>
         </nav>
     );
 }
-export default Navbar;
+export default NavbarSpecial;
