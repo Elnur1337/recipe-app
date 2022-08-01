@@ -68,7 +68,6 @@ nav {
   margin: 0 auto;
 }
 .logoText {
-  color: white;
   font-weight: 500;
   font-family: 'Dancing Script', cursive;
 }
@@ -98,7 +97,6 @@ nav {
 .navbarList li {
   width: 100%;
   text-align: center;
-  color: white;
   font-weight: 400;
   transition: color 300ms ease-in-out, font-weight 300ms ease-in-out;
 }
