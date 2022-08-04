@@ -7,13 +7,12 @@ import { MdBookmark, MdBookmarkBorder } from 'react-icons/md';
 
 const RecipeCard = ({recipeData}) => {
     const [isSaved, setIsSaved] = useState(false);
-    console.log(recipeData);
     return (
         <article className="recipeCard">
             <img src={recipeData.image} alt="recipeImg"/>
             <div className='infoContainer'>
-                <h4><Link to={'/'}>{recipeData.title}</Link></h4>
-                <p dangerouslySetInnerHTML={{__html: `${recipeData.summary.slice(0, 100)}...`}} className='recipeSummary'></p>
+                <h4 className='cardTitle'><Link to={'/'}>{recipeData.title.startsWith('http') ? 'No title available' : recipeData.title}</Link></h4>
+                <p dangerouslySetInnerHTML={{__html: `${recipeData.summary.slice(0, 88)}...`}} className='recipeSummary'></p>
                 <Link to={'/'} className='readMoreBtn'>Read more</Link>
                 <div className='cardFooter'>
                     <span className='readyInMinutes'><AiOutlineClockCircle className='clockIcon'/> {recipeData.readyInMinutes}min</span>

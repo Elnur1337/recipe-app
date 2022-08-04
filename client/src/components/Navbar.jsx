@@ -28,9 +28,9 @@ const Navbar = () => {
             :
                 <>
                     <Link to={'/'} className="logoText" style={{color: 'black'}}>Your Next Meal</Link>
-                    <ul className={`navbarList mobile ${isMobileMenuActive && 'active'}`}>
-                        <li className='loginBtn' style={{color: 'black'}}>Login</li>
-                        <li className='registerBtn' style={{color: 'black'}}>Register</li>
+                    <ul className={`navbarList mobile ${isMobileMenuActive && 'active'}`} style={{backgroundColor: '#222', zIndex: '1'}}>
+                        <li className='loginBtn' style={{color: 'white'}}>Login</li>
+                        <li className='registerBtn' style={{color: 'white'}}>Register</li>
                     </ul>
                     <ul className='navbarLinks desktop'>
                         <li className='loginLink' style={{color: 'black'}}>Login</li>

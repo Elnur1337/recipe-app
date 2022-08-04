@@ -7,7 +7,7 @@ const ByIngredients = () => {
         <section className="byIngredientsSection">
             <h2>Limited on ingredients?</h2>
             <input type="text" name="searchByIngredients" id="searchByIngredients" placeholder="potato..." value={searchInput} onChange={(e) => setSearchInput(e.target.value)}/>
-            <Link to={`/search/${searchInput}`} className='searchByIngredientsBtn'>Search recipe by ingredients</Link>
+            <Link to={searchInput ? `/search/${searchInput}` : '/'} className='searchByIngredientsBtn'>Search recipe by ingredients</Link>
         </section>
     );
 }

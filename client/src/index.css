@@ -279,6 +279,46 @@ nav {
 .searchByIngredientsBtn {
   font-size: clamp(1rem, 2vw, 1.5rem);
 }
+.searchSection {
+  max-width: 100rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+.searchSection .cardsContainer {
+  grid-template-columns: repeat(auto-fit, minmax(max(18rem), 1fr));
+  grid-gap: 2rem;
+}
+footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-top: 1px solid gray;
+}
+footer > p {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #222;
+}
+.footerImgContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.footerImgContainer p {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-right: 1rem;
+  color: #222;
+}
+.footerImgContainer img {
+  height: 4rem;
+}
+.flexFix {
+  display: none;
+}
 .desktop {
   display: none;
 }
@@ -334,6 +374,19 @@ nav {
     background-size: cover;
     background-position: center center;
   }
+  footer {
+    padding-left: 20rem;
+    padding-right: 20rem;
+    margin: 0 auto;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  footer > p {
+    margin-bottom: 0;
+  }
+  .flexFix {
+    display: block;
+  }
 }
 @media screen and (min-width: 1000px) {
   .clock {
@@ -344,5 +397,8 @@ nav {
   }
   .findMeal {
     margin-top: 1.5rem;
+  }
+  .flexFix  {
+    display: block;
   }
 }

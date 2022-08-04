@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 //Components
 import Navbar from '../components/Navbar';
 import RecipeCard from '../components/RecipeCard';
+import Footer from '../components/Footer';
 
 //Api key
 import apiKey from '../assets/apikey';
@@ -12,55 +13,46 @@ import apiKey from '../assets/apikey';
 document.title = 'Your Next Meal - Search results';
 
 const Search = () => {
-    let start = 0, end = 10;
-    // let firstPage = 1, lastPage = 10, currentPage = 0;
     const {searchInput} = useParams();
 
     //States
     const [data, setData] = useState([]);
-    const [shownData, setShownData] = useState([]);
     const [recipeDataArr, setRecipeDataArr] = useState([]);
     let tempArr = [];
     // useEffect(() => {
-    //     Axios.get(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${apiKey}&number=100&ingredients=${searchInput}`)
-    //     .then(res => {setData(res.data)});
-    //     console.log(data);
+    //     Axios.get(`https://api.spoonacular.com/recipes/findByIngredients?apiKey=${apiKey}&number=18&ingredients=${searchInput}`)
+    //     .then(res => {
+    //         setData(res.data);            
+    //     });
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, []);
     // useEffect(() => {
     //     if (data) {
-    //         setShownData(data.slice(start, end));
-    //         console.log(shownData);
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [data])
-    // useEffect(() => {
-    //     if (shownData) {
-    //         for (let counter = 0; counter < 10; counter++) {
-    //             console.log(shownData[counter]);
-    //             if (shownData[counter]) {
-    //                 Axios.get(`https://api.spoonacular.com/recipes/${shownData[counter].id}/information?apiKey=${apiKey}`)
-    //                 .then(res => {tempArr.push(res.data)}); 
-    //             }
-    //         }
+    //         data.forEach(recipe => {
+    //             Axios.get(`https://api.spoonacular.com/recipes/${recipe.id}/information?apiKey=${apiKey}`)
+    //             .then(res => tempArr.push(res.data)); 
+    //         });
     //         setRecipeDataArr(tempArr);
     //     }
+    //     console.log(recipeDataArr);
     //     console.log(tempArr);
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [shownData]);
+    // }, [data]);
     useEffect(() => {
-        setRecipeDataArr(JSON.parse(localStorage.getItem('random')));
+        setRecipeDataArr(JSON.parse(localStorage.getItem('search')));
     }, []);
     return (
         <>
             <Navbar/>
-            <section>
-                <h2 onClick={() => console.log(data)}>Search results</h2>
-                <h2 onClick={() => console.log(tempArr)}>Search results</h2>
-                {recipeDataArr && recipeDataArr.map((recipe) => {
-                    return <RecipeCard key={recipe.id} recipeData={recipe}/>
-                })}
+            <section className='searchSection'>
+                <h2 className='randomPicksTitle' style={{zIndex: '-5'}}>Search results</h2>
+                <div className='cardsContainer'>
+                    {recipeDataArr && recipeDataArr.map((recipe) => {
+                        return <RecipeCard key={recipe.id} recipeData={recipe}/>
+                    })}
+                </div>
             </section>
+            <Footer/>
         </>
     );
 }
