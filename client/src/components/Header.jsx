@@ -1,13 +1,8 @@
-import React, { Suspense, useState, useEffect } from 'react';
-
-//Components
-import Navbar from './Navbar';
-const HeaderMobile = React.lazy(() => import("../components/HeaderMobile"));
-const HeaderDesktop = React.lazy(() => import("../components/HeaderDesktop"));
+import { useState, useEffect } from "react";
 
 const Header = () => {
-
-    const [meal, setMeal] = useState('breakfast');
+    //States
+    const [meal, setMeal] = useState('breakfest');
     const [clock, setClock] = useState(null);
 
     useEffect(() => {
@@ -27,17 +22,9 @@ const Header = () => {
 
     return (
         <header>
-            <div className="blackOverlay"></div>
-            <Suspense>
-                {window.innerWidth >= 700 ? <HeaderDesktop/> : <HeaderMobile/>}
-            </Suspense>
-            <div className='headerContent'>
-                <Navbar/>
-                <h2 className='wlcmMsg'>Welcome to Your Next Meal!</h2>
-                <article className='clock'>{clock}</article>
-                <p className='getRandom'>Get random recipe from our database!</p>
-                <button className='findMeal'>{`Find your next ${meal}`}</button>
-            </div>
+            <h3>Welcome to Your Next Meal!</h3>
+            <article>{clock}</article>
+            <button>{`Find your next ${meal}`}</button>
         </header>
     );
 }

@@ -1,44 +1,45 @@
-import { useState } from 'react';
+//Libraries
 import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useState, useContext } from 'react';
 
 //Icons
-import { FaBars } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSearch } from 'react-icons/fa';
+
+//Context
+import { UserContext } from '../App';
 
 const Navbar = () => {
-    const location = useLocation();
-
     //States
-    const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
+    const [user] = useContext(UserContext);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    //Input states
+    const [searchInput, setSearchInput] = useState('');
     return (
         <nav>
-            {location.pathname === '/' ? 
-                <>
-                    <Link to={'/'} className="logoText" style={{color: 'white'}}>Your Next Meal</Link>
-                    <ul className={`navbarList mobile ${isMobileMenuActive && 'active'}`}>
-                        <li className='loginBtn' style={{color: 'white'}}>Login</li>
-                        <li className='registerBtn' style={{color: 'white'}}>Register</li>
-                    </ul>
-                    <ul className='navbarLinks desktop'>
-                        <li className='loginLink' style={{color: 'white'}}>Login</li>
-                        <li className='registerLink' style={{color: 'white'}}>Register</li>
-                    </ul>
-                    <FaBars className='hamburgerIcon mobile' onClick={() => setIsMobileMenuActive(!isMobileMenuActive)}/>
-                </>
-            :
-                <>
-                    <Link to={'/'} className="logoText" style={{color: 'black'}}>Your Next Meal</Link>
-                    <ul className={`navbarList mobile ${isMobileMenuActive && 'active'}`} style={{backgroundColor: '#222', zIndex: '1'}}>
-                        <li className='loginBtn' style={{color: 'white'}}>Login</li>
-                        <li className='registerBtn' style={{color: 'white'}}>Register</li>
-                    </ul>
-                    <ul className='navbarLinks desktop'>
-                        <li className='loginLink' style={{color: 'black'}}>Login</li>
-                        <li className='registerLink' style={{color: 'black'}}>Register</li>
-                    </ul>
-                    <FaBars className='hamburgerIcon mobile' style={{color: 'black'}} onClick={() => setIsMobileMenuActive(!isMobileMenuActive)}/>
-                </>    
+            <div  className='flexFix'></div>
+            <p className='logoText'><Link to={'/'}>Your Next Meal</Link></p>
+            {/* Mobile menu icon */}
+            {!isMobileMenuOpen ? 
+            <FaBars height={'1.2rem'} className='mobileMenuIcon' onClick={() => setIsMobileMenuOpen(prev => !prev)}/> :
+            <FaTimes className='mobileMenuIcon' onClick={() => setIsMobileMenuOpen(prev => !prev)}/>
             }
+            <div className='mobileNavContainer' style={isMobileMenuOpen ? {left: '0', borderTop: '1px solid rgb(238, 238, 238)', transition: 'left 500ms ease-in-out, border-top 500ms ease-in-out 500ms'} : {left: '-100%', borderTop: 'none',  transition: 'left 500ms ease-in-out 500ms, border-top 500ms ease-in-out'}}>
+                <form className='searchForm' style={isMobileMenuOpen ? {opacity: '1', transition: 'opacity 500ms ease-in-out 500ms' } : {opacity: '0', transition: 'opacity 500ms ease-in-out'}}>
+                    <input type="text" className='searchBar' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Search recipe...'/>
+                    <FaSearch className='searchSubmit'/>
+                </form>
+                {user ? 
+                <div className='userInfoContainer' style={isMobileMenuOpen ? {opacity: '1', transition: 'opacity 500ms ease-in-out 500ms' } : {opacity: '0', transition: 'opacity 500ms ease-in-out'}}>
+                    <Link to={'/myprofile'}><img src={''} alt='User avatar' className='userAvatar'/></Link>
+                    <p className='username'>Username</p>
+                </div> :
+                <ul style={isMobileMenuOpen ? {opacity: '1', transition: 'opacity 500ms ease-in-out 500ms' } : {opacity: '0', transition: 'opacity 500ms ease-in-out'}}>
+                    <li className='loginBtn'><Link to={'/login'}>Login</Link></li>
+                    <li><Link to={'/register'}>Register</Link></li>
+                </ul>
+                }
+            </div>
         </nav>
     );
 }
