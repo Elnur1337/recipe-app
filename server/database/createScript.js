@@ -15,17 +15,17 @@ const createScript = () => {
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         first_name VARCHAR(100) NOT NULL,
         last_name VARCHAR(100) NOT NULL,
-        username VARCHAR(15) NOT NULL,
+        username VARCHAR(20) NOT NULL UNIQUE,
         password VARCHAR(500) NOT NULL,
-        email VARCHAR(100) NOT NULL,
-        phone_number VARCHAR(20),
+        email VARCHAR(100) NOT NULL UNIQUE,
+        phone_number VARCHAR(20) UNIQUE,
         birthdate DATE NOT NULL,
-        img_path VARCHAR(100),
+        img_path VARCHAR(100) UNIQUE,
         premium BOOLEAN NOT NULL DEFAULT false,
         admin BOOLEAN NOT NULL DEFAULT false,
         created_at TIMESTAMP NOT NULL DEFAULT NOW(),
         last_visited TIMESTAMP NOT NULL DEFAULT NOW(),
-        refresh_token VARCHAR(500) NOT NULL
+        refresh_token VARCHAR(500)
     );
 
     CREATE TABLE IF NOT EXISTS recipes (

@@ -60,7 +60,7 @@ nav a {
     left: 0;
     background-color: var(--bgColor);
     width: 100vw;
-    height: 8rem;
+    height: 11rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -98,8 +98,44 @@ nav a {
 .mobileNavContainer li {
     text-align: center;
 }
+.createBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .4rem 1rem;
+    border: none;
+    border-radius: .2rem;
+    background: var(--fontColor);
+    color: var(--bgColor);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+.createBtn:active {
+    transform: scale(.98);
+}
+.createIcon {
+    margin-right: .1rem;
+}
 .loginBtn {
     margin-bottom: 1rem;
+}
+.createDialog {
+    width: 20vw;
+    height: 40vh;
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translateY(-50%) translateX(-50%);
+    border: none;
+    border-radius: .5rem;
+    background: var(--bgColor);
+    color: var(--fontColor);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 header {
     height: calc(100vh - 61px);
@@ -135,8 +171,8 @@ header h3 {
         position: static;
         z-index: 5;
         flex-direction: row;
-        justify-content: space-between;
-        width: calc(55% + 3rem);
+        justify-content: flex-end;
+        width: 50%;
         height: 3rem;
     }
     .mobileNavContainer > * {
@@ -144,6 +180,7 @@ header h3 {
     }
     .searchForm {
         margin-bottom: 0;
+        margin-right: 1rem;
     }
     .searchForm input {
         width: 15rem;
@@ -165,5 +202,9 @@ header h3 {
     }
     header {
         height: calc(100vh - 80px);
+    }
+    .createBtn {
+        margin-bottom: 0;
+        margin-right: 1rem;
     }
 }

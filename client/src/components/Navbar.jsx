@@ -1,20 +1,29 @@
 //Libraries
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState, useContext } from 'react';
 
 //Icons
-import { FaBars, FaTimes, FaSearch } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSearch, FaPlus } from 'react-icons/fa';
 
 //Context
 import { UserContext } from '../App';
+import { useEffect } from 'react';
 
 const Navbar = () => {
     //States
     const [user] = useContext(UserContext);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     //Input states
     const [searchInput, setSearchInput] = useState('');
+
+    const location = useLocation();
+    useEffect(() => {
+        setIsDialogOpen(false);
+        setIsMobileMenuOpen(false);
+    }, [location]);
+
     return (
         <nav>
             <div  className='flexFix'></div>
@@ -29,6 +38,7 @@ const Navbar = () => {
                     <input type="text" className='searchBar' value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder='Search recipe...'/>
                     <FaSearch className='searchSubmit'/>
                 </form>
+                <button className='createBtn' onClick={() => setIsDialogOpen(prev => !prev)} style={isMobileMenuOpen ? {opacity: '1', transition: 'opacity 500ms ease-in-out 500ms' } : {opacity: '0', transition: 'opacity 500ms ease-in-out'}}><FaPlus className='createIcon'/>Create</button>
                 {user ? 
                 <div className='userInfoContainer' style={isMobileMenuOpen ? {opacity: '1', transition: 'opacity 500ms ease-in-out 500ms' } : {opacity: '0', transition: 'opacity 500ms ease-in-out'}}>
                     <Link to={'/myprofile'}><img src={''} alt='User avatar' className='userAvatar'/></Link>
@@ -40,6 +50,26 @@ const Navbar = () => {
                 </ul>
                 }
             </div>
+            {isDialogOpen && 
+            <dialog open className='createDialog'>
+                {!user ? 
+                <>
+                    <button disabled>Create new recipe</button>
+                    <p>You need to log in!</p>
+                    <button disabled>Create new post</button>
+                    <p>You need to log in!</p>
+                </> : 
+                <>
+                    <button>Create new recipe</button>
+                    {!user.isPremium ? 
+                    <>
+                        <button disabled>Create new post</button>
+                        <p>For premium users only! Buy premium here.</p>
+                    </> :
+                    <button>Create new post</button>
+                    }
+                </>}
+            </dialog>}
         </nav>
     );
 }
