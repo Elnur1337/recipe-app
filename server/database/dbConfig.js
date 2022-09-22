@@ -1,9 +1,11 @@
+//Libraries
+require('dotenv/config');
 const mysql = require('mysql');
 
 const database = mysql.createConnection({
     host: 'localhost',
     user: 'elnurdev',
-    password: 'elnurdev',
+    password: process.env.MYSQL_PASSWORD,
     database: 'yournextmeal'
 });
-exports.dbConnection = database;
+module.exports = database;

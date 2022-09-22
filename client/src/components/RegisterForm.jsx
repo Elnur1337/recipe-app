@@ -16,7 +16,7 @@ const RegisterForm = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [phonePrefix, setPhonePrefix] = useState('');
+    const [phonePrefix, setPhonePrefix] = useState('+387');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [birthDay, setBirthDay] = useState('01');
     const [birthMonth, setBirthMonth] = useState('01');
@@ -26,7 +26,7 @@ const RegisterForm = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         let isFormValid = true;
         if (firstName.length < 2 || firstName.length > 100) {
@@ -43,6 +43,12 @@ const RegisterForm = () => {
             }
         }
         if (isFormValid) {
+            if (lastName.length < 2 || lastName.length > 100) {
+                isFormValid = false;
+                setErrorMsg('Last name must be at least 2 characters long!');
+            }
+        }
+        if (isFormValid) {
             for (let counter = 0; counter < lastName.length; counter++) {
                 const asciiCode = lastName.charCodeAt(counter);
                 if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
@@ -52,9 +58,22 @@ const RegisterForm = () => {
             }
         }
         if (isFormValid) {
+            if(username.length < 2 || username.length > 20) {
+                isFormValid = false;
+                setErrorMsg('Username must be between 2 and 20 characters!');
+            }
+        }
+        if (isFormValid) {
             if (password.length < 8) {
                 isFormValid = false;
-                setErrorMsg("Password must be at least 8 characters long!");
+                setErrorMsg('Password must be at least 8 characters long!');
+            }
+        }
+        if (isFormValid) {
+            const mailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (!email.match(mailRegex)) {
+                isFormValid = false;
+                console.log('Email addres is not valid!');
             }
         }
         if (isFormValid) {
@@ -64,7 +83,7 @@ const RegisterForm = () => {
                     const asciiCode = phoneNumber.charCodeAt(counter);
                     if (!(asciiCode > 47 && asciiCode < 58)) {
                         isFormValid = false;
-                        setErrorMsg("Phone number can only contain numbers!");
+                        setErrorMsg('Phone number can only contain numbers!');
                     } 
                 }
                 } else {
@@ -76,12 +95,29 @@ const RegisterForm = () => {
         if (isFormValid) {
             if (!dayjs(`${birthYear}-${birthMonth}-${birthDay}`, 'YYYY-MM-DD', true).isValid()) {
                 isFormValid = false;
-                console.log(isFormValid);
+                setErrorMsg("Date you entered is not valid!");
             }
+        }
+        if (isFormValid) {
+            setErrorMsg('');
+            const res = await axios.post('/register', {
+                firstName,
+                lastName,
+                username,
+                password,
+                email,
+                phonePrefix,
+                phoneNumber,
+                birthYear,
+                birthMonth,
+                birthDay
+            });
+            console.log(res);
         }
     }
     return (
         <form autoComplete="off" onSubmit={submitHandler}>
+            <h2>Registration</h2>
             <div className="formControl">
                 <label htmlFor="firstName">First name:*</label>
                 <input type="text" name="firstName" id="firstName" required value={firstName} onChange={(e) => setFirstName(e.target.value)}/>

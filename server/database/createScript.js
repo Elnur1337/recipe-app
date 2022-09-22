@@ -1,10 +1,12 @@
+//Libraries
+require('dotenv/config');
 const mysql = require('mysql');
 
 const createScript = () => {
     const database = mysql.createConnection({
         host: 'localhost',
         user: 'elnurdev',
-        password: 'elnurdev',
+        password: process.env.MYSQL_PASSWORD,
         multipleStatements: true
     });
     const query = `
