@@ -134,18 +134,6 @@ const createScript = () => {
         acknowledged BOOLEAN NOT NULL DEFAULT false,
         FOREIGN KEY (created_by) REFERENCES users(id)
     );
-
-    CREATE TABLE IF NOT EXISTS logs (
-        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-        user_id INT NOT NULL,
-        action VARCHAR(255),
-        recipe_id INT,
-        post_id INT,
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (recipe_id) REFERENCES recipes(id),
-        FOREIGN KEY (post_id) REFERENCES posts(id)
-    );
     `
 
     database.query(query);

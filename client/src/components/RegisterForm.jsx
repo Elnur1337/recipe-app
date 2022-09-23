@@ -24,28 +24,28 @@ const RegisterForm = () => {
 
     //States
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    const [errorMsg, setErrorMsg] = useState('');
-    
+    const [message, setMessage] = useState({msg: '', type: ''});
+
     const submitHandler = async (e) => {
         e.preventDefault();
         let isFormValid = true;
         if (firstName.length < 2 || firstName.length > 100) {
             isFormValid = false;
-            setErrorMsg('First name must be at least 2 characters long!');
+            setMessage({msg: 'First name must be at least 2 characters long!', type: 'error'});
         }
         if (isFormValid) {
             for (let counter = 0; counter < firstName.length; counter++) {
                 const asciiCode = firstName.charCodeAt(counter);
                 if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
                     isFormValid = false;
-                    setErrorMsg("First name can only contain letters, space character and symbols (-, .,')!");
+                    setMessage({msg: "First name can only contain letters, space character and symbols (-, .,')!", type: 'error'});
                 } 
             }
         }
         if (isFormValid) {
             if (lastName.length < 2 || lastName.length > 100) {
                 isFormValid = false;
-                setErrorMsg('Last name must be at least 2 characters long!');
+                setMessage({msg: 'Last name must be at least 2 characters long!', type: 'error'});
             }
         }
         if (isFormValid) {
@@ -53,27 +53,27 @@ const RegisterForm = () => {
                 const asciiCode = lastName.charCodeAt(counter);
                 if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
                     isFormValid = false;
-                    setErrorMsg("Last name can only contain letters, space character and symbols (-, .,')!");
+                    setMessage({msg: "Last name can only contain letters, space character and symbols (-, .,')!", type: 'error'});
                 } 
             }
         }
         if (isFormValid) {
             if(username.length < 2 || username.length > 20) {
                 isFormValid = false;
-                setErrorMsg('Username must be between 2 and 20 characters!');
+                setMessage({msg: 'Username must be between 2 and 20 characters!', type: 'error'});
             }
         }
         if (isFormValid) {
             if (password.length < 8) {
                 isFormValid = false;
-                setErrorMsg('Password must be at least 8 characters long!');
+                setMessage({msg: 'Password must be at least 8 characters long!', type: 'error'});
             }
         }
         if (isFormValid) {
-            const mailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            const mailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
             if (!email.match(mailRegex)) {
                 isFormValid = false;
-                console.log('Email addres is not valid!');
+                setMessage({msg: 'Email addres is not valid!', type: 'error'});
             }
         }
         if (isFormValid) {
@@ -83,36 +83,40 @@ const RegisterForm = () => {
                     const asciiCode = phoneNumber.charCodeAt(counter);
                     if (!(asciiCode > 47 && asciiCode < 58)) {
                         isFormValid = false;
-                        setErrorMsg('Phone number can only contain numbers!');
+                        setMessage({msg: 'Phone number can only contain numbers!', type: 'error'});
                     } 
                 }
                 } else {
                         isFormValid = false;
-                        setErrorMsg("Phone number can't be longer then 20 characters!");
+                        setMessage({msg: "Phone number can't be longer then 20 characters!", type: 'error'});
                     }
             }
         }
         if (isFormValid) {
             if (!dayjs(`${birthYear}-${birthMonth}-${birthDay}`, 'YYYY-MM-DD', true).isValid()) {
                 isFormValid = false;
-                setErrorMsg("Date you entered is not valid!");
+                setMessage({msg: "Date you entered is not valid!", type: 'error'});
             }
         }
         if (isFormValid) {
-            setErrorMsg('');
-            const res = await axios.post('/register', {
-                firstName,
-                lastName,
-                username,
-                password,
-                email,
-                phonePrefix,
-                phoneNumber,
-                birthYear,
-                birthMonth,
-                birthDay
-            });
-            console.log(res);
+            try {
+                const res = await axios.post('/register', {
+                    firstName,
+                    lastName,
+                    username,
+                    password,
+                    email,
+                    phonePrefix,
+                    phoneNumber,
+                    birthYear,
+                    birthMonth,
+                    birthDay
+                });
+                console.log(res);
+                setMessage({msg: res.data.msg, type: 'success'});
+            } catch (err) {
+                setMessage({msg: err.response.data.errorMsg, type: 'error'});  
+            }
         }
     }
     return (
@@ -316,7 +320,7 @@ const RegisterForm = () => {
                 </div>
             </div>
             <input type="submit" value="Register" />
-            <p className="errorMsg">{errorMsg}</p>
+            <p className="message">{message.msg}</p>
         </form>
     );
 }

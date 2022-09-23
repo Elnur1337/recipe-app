@@ -1,0 +1,3 @@
+Sep 23 2022 10:48:57 | IP not available | Location not available | Action: User registration | Parameters: firstName = Elnur, lastName = Bjelić, username = Mandayli and email = elnur.bjelic1337@gmail.com
+Sep 23 2022 12:36:11 | IP not available | Location not available | Action: User registration | Parameters: firstName = Elnur, lastName = Bjelić, username = mandayli and email = elnur.bjelic1337@gmail.com
+Sep 23 2022 12:45:12 | IP not available | Location not available | Action: User registration | Parameters: firstName = Elnur, lastName = Bjelić, username = Mandayli and email = elnur.bjelic1337@gmail.com
