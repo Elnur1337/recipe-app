@@ -62,7 +62,7 @@ const registerUser = async (req, res) => {
     const birthDate = new Date(Number(birthYear), Number(birthMonth) - 1, Number(birthDay));
     const hashedPassword = await hash(password, 10);
     const query = `INSERT INTO users(first_name, last_name, username, password, email, phone_number, birthdate) VALUES (?, ?, ?, ?, ?, ${phone.length > 0 ? phone : null}, ?)`;
-    database.query(query, [firstName, lastName, username, hashedPassword, email, birthDate], (err) => {
+    database.query(query, [firstName, lastName, username, hashedPassword, email, birthDate], err => {
         if (err) {
             if (err.code === 'ER_DUP_ENTRY') {
                 const dupField = err.sqlMessage.split(' ')[5].split('.')[1].substring(0, err.sqlMessage.split(' ')[5].split('.')[1].length - 1);
