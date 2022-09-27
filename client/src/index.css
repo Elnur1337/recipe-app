@@ -159,6 +159,9 @@ header h3 {
     font-family: 'Dancing Script', cursive;
     margin-bottom: 2rem;
 }
+.invalidInput {
+    border: 2px solid red;
+}
 
 @media screen and (min-width: 768px) {
 

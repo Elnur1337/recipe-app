@@ -11,70 +11,109 @@ dayjs.extend(customParseFormat);
 
 const RegisterForm = () => {
     //Input states
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+    const [firstName, setFirstName] = useState({value: '', isValid: false});
+    const [lastName, setLastName] = useState({value: '', isValid: false});
+    const [username, setUsername] = useState({value: '', isValid: false});
+    const [password, setPassword] = useState({value: '', isValid: false});
+    const [email, setEmail] = useState({value: '', isValid: false});
     const [phonePrefix, setPhonePrefix] = useState('+387');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [birthDay, setBirthDay] = useState('01');
-    const [birthMonth, setBirthMonth] = useState('01');
-    const [birthYear, setBirthYear] = useState('2022');
+    const [phoneNumber, setPhoneNumber] = useState({value: '', isValid: false});
+    const [birthDay, setBirthDay] = useState({value: '01', isValid: true});
+    const [birthMonth, setBirthMonth] = useState({value: '01', isValid: true});
+    const [birthYear, setBirthYear] = useState({value: '2022', isValid: true});
 
     //States
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [message, setMessage] = useState({msg: '', type: ''});
-
-    const checkInputs = () => {
-        if (firstName.length < 2 || firstName.length > 100) {
+    
+    const isFirstNameValid = () => {
+        console.log(firstName);
+        if (firstName.value.length < 2 || firstName.value.length > 100) {
+            setFirstName({...firstName, isValid: false});
             return setMessage({msg: 'First name must be at least 2 characters long!', type: 'error'});
         }
-        for (let counter = 0; counter < firstName.length; counter++) {
-            const asciiCode = firstName.charCodeAt(counter);
+        for (let counter = 0; counter < firstName.value.length; counter++) {
+            const asciiCode = firstName.value.charCodeAt(counter);
             if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
+                setFirstName({...firstName, isValid: false});
                 return setMessage({msg: "First name can only contain letters, space character and symbols (-, .,')!", type: 'error'});
-            } 
+            }
         }
-        if (lastName.length < 2 || lastName.length > 100) {
+        return setFirstName({...firstName, isValid: true});
+    }
+
+    const isLastNameValid = () => {
+        if (lastName.value.length < 2 || lastName.value.length > 100) {
+            setLastName({...lastName, isValid: false});
             return setMessage({msg: 'Last name must be at least 2 characters long!', type: 'error'});
         }
-        for (let counter = 0; counter < lastName.length; counter++) {
-            const asciiCode = lastName.charCodeAt(counter);
+        for (let counter = 0; counter < lastName.value.length; counter++) {
+            const asciiCode = lastName.value.charCodeAt(counter);
             if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
+                setLastName({...lastName, isValid: false});
                 return setMessage({msg: "Last name can only contain letters, space character and symbols (-, .,')!", type: 'error'});
             } 
         }
-        if(username.length < 2 || username.length > 20) {
+        return setLastName({...lastName, isValid: true});
+    }
+
+    const isUsernameValid = () => {
+        if(username.value.length < 2 || username.value.length > 20) {
+            setUsername({...username, isValid: false});
             return setMessage({msg: 'Username must be between 2 and 20 characters!', type: 'error'});
         }
-        if (password.length < 8) {
+        return setUsername({...username, isValid: true});
+    }
+
+    const isPasswordValid = () => {
+        if (password.value.length < 8) {
+            setPassword({...password, isValid: false});
             return setMessage({msg: 'Password must be at least 8 characters long!', type: 'error'});
         }
+        return setPassword({...password, isValid: true});
+    }
+
+    const isEmailValid = () => {
         const mailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-        if (!email.match(mailRegex)) {
+        if (!email.value.match(mailRegex)) {
+            setEmail({...email, isValid: false});
             return setMessage({msg: 'Email addres is not valid!', type: 'error'});
         }
-        if (phoneNumber.length > 0) {
-            if (phoneNumber.length < 15) {
-                for (let counter = 0; counter < phoneNumber.length; counter++) {
-                const asciiCode = phoneNumber.charCodeAt(counter);
+        return setEmail({...email, isValid: true});
+    }
+
+    const isPhoneNumberValid = () => {
+        if (phoneNumber.value.length > 0) {
+            if (phoneNumber.value.length < 15) {
+                for (let counter = 0; counter < phoneNumber.value.length; counter++) {
+                const asciiCode = phoneNumber.value.charCodeAt(counter);
                 if (!(asciiCode > 47 && asciiCode < 58)) {
+                    setPhoneNumber({...phoneNumber, isValid: false});
                     return setMessage({msg: 'Phone number can only contain numbers!', type: 'error'});
                 } 
             }
             } else {
+                    setPhoneNumber({...phoneNumber, isValid: false});
                     return setMessage({msg: "Phone number can't be longer then 20 characters!", type: 'error'});
                 }
         }
-        if (!dayjs(`${birthYear}-${birthMonth}-${birthDay}`, 'YYYY-MM-DD', true).isValid()) {
+        return setPhoneNumber({...phoneNumber, isValid: true});
+    }
+
+    const isBirthDateValid = () => {
+        if (!dayjs(`${birthYear.value}-${birthMonth.value}-${birthDay.value}`, 'YYYY-MM-DD', true).isValid()) {
+            setBirthDay({...birthDay, isValid: false});
+            setBirthMonth({...birthMonth, isValid: false});
+            setBirthYear({...birthYear, isValid: false});
             return setMessage({msg: "Date you entered is not valid!", type: 'error'});
         }
+        setBirthDay({...birthDay, isValid: true});
+        setBirthMonth({...birthMonth, isValid: true});
+        return setBirthYear({...birthYear, isValid: true});
     }
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        checkInputs();
         try {
             const res = await axios.post('/register', {
                 firstName,
@@ -99,26 +138,26 @@ const RegisterForm = () => {
             <h2>Registration</h2>
             <div className="formControl">
                 <label htmlFor="firstName">First name:*</label>
-                <input type="text" name="firstName" id="firstName" required value={firstName} onChange={(e) => setFirstName(e.target.value)} onBlur={checkInputs}/>
+                <input type="text" name="firstName" id="firstName" className={firstName.value ? (!firstName.isValid ? 'invalidInput' : undefined) : 'input'} required value={firstName.value} onChange={(e) => setFirstName({...firstName, value: e.target.value})} onBlur={isFirstNameValid}/>
             </div>
             <div className="formControl">
                 <label htmlFor="lastName">Last name:*</label>
-                <input type="text" name="lastName" id="lastName" required value={lastName} onChange={(e) => setLastName(e.target.value)}/>
+                <input type="text" name="lastName" id="lastName" className={lastName.value ? (!lastName.isValid ? 'invalidInput' : undefined) : 'input'} required value={lastName.value} onChange={(e) => setLastName({...lastName, value: e.target.value})} onBlur={isLastNameValid}/>
             </div>
             <div className="formControl">
                 <label htmlFor="username">Username:*</label>
-                <input type="text" name="username" id="username" required value={username} onChange={(e) => setUsername(e.target.value)}/>
+                <input type="text" name="username" id="username" className={username.value ? (!username.isValid ? 'invalidInput' : undefined) : 'input'} required value={username.value} onChange={(e) => setUsername({...username, value: e.target.value})} onBlur={isUsernameValid}/>
             </div>
             <div className="formControl">
                 <label htmlFor="password">Password:*</label>
                 <div className="passwordInput">
-                    <input type={isPasswordVisible ? 'text' : 'password'} name="password" id="password" required value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    <input type={isPasswordVisible ? 'text' : 'password'} name="password" id="password" className={password.value ? (!password.isValid ? 'invalidInput' : undefined) : 'input'} required value={password.value} onChange={(e) => setPassword({...password, value: e.target.value})} onBlur={isPasswordValid}/>
                     {isPasswordVisible ? <FaEye onClick={() => setIsPasswordVisible(prev => !prev)}/> : <FaEyeSlash onClick={() => setIsPasswordVisible(prev => !prev)}/>}
                 </div>
             </div>
             <div className="formControl">
                 <label htmlFor="email">Email:*</label>
-                <input type="text" name="email" id="email" required value={email} onChange={(e) => setEmail(e.target.value)}/>
+                <input type="text" name="email" id="email" className={email.value ? (!email.isValid ? 'invalidInput' : undefined) : 'input'} required value={email.value} onChange={(e) => setEmail({...email, value: e.target.value})} onBlur={isEmailValid}/>
             </div>
             <div className="formControl">
                 <label htmlFor="phoneNumber">Phone number:</label>
@@ -127,7 +166,7 @@ const RegisterForm = () => {
                         <option value="+387">+387</option>
                         <option value="+456">+456</option>
                     </select>
-                    <input type="number" name="phoneNumber" id="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
+                    <input type="text" name="phoneNumber" id="phoneNumber" className={phoneNumber.value ? (!phoneNumber.isValid ? 'invalidInput' : undefined) : 'input'} value={phoneNumber.value} onChange={(e) => setPhoneNumber({...phoneNumber, value: e.target.value})} onBlur={isPhoneNumberValid}/>
                 </div>
             </div>
             <div className="formVerticalContainer">
@@ -135,7 +174,7 @@ const RegisterForm = () => {
                 <div className="formHorizontalContainer">
                     <div className="formControl">
                         <label htmlFor="birthdateDay">Day:</label>
-                        <select name="birthdateDay" id="birthdateDay" required value={birthDay} onChange={(e) => setBirthDay(e.target.value)}>
+                        <select name="birthdateDay" id="birthdateDay" className={birthDay.value ? (!birthDay.isValid ? 'invalidInput' : undefined) : 'input'} required value={birthDay.value} onChange={(e) => setBirthDay({...birthDay, value: e.target.value})} onBlur={isBirthDateValid}>
                             <option value="01">1</option>
                             <option value="02">2</option>
                             <option value="03">3</option>
@@ -171,7 +210,7 @@ const RegisterForm = () => {
                     </div>
                     <div className="formControl">
                         <label htmlFor="birthdateMonth">Month:</label>
-                        <select name="birthdateMonth" id="birthdateMonth" required value={birthMonth} onChange={(e) => setBirthMonth(e.target.value)}>
+                        <select name="birthdateMonth" id="birthdateMonth" className={birthMonth.value ? (!birthMonth.isValid ? 'invalidInput' : undefined) : 'input'} required value={birthMonth.value} onChange={(e) => setBirthMonth({...birthMonth, value: e.target.value})} onBlur={isBirthDateValid}>
                             <option value="01">January</option>
                             <option value="02">February</option>
                             <option value="03">March</option>
@@ -188,7 +227,7 @@ const RegisterForm = () => {
                     </div>
                     <div className="formControl">
                         <label htmlFor="birthdateYear">Year:</label>
-                        <select name="birthdateYear" id="birthdateYear" required value={birthYear} onChange={(e) => setBirthYear(e.target.value)}>
+                        <select name="birthdateYear" id="birthdateYear" className={birthYear.value ? (!birthYear.isValid ? 'invalidInput' : undefined) : 'input'} required value={birthYear.value} onChange={(e) => setBirthYear({...birthYear, value: e.target.value})} onBlur={isBirthDateValid}>
                             <option value="2022">2022</option>
                             <option value="2021">2021</option>
                             <option value="2020">2020</option>
