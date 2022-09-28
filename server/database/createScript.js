@@ -21,7 +21,7 @@ const createScript = () => {
         password VARCHAR(500) NOT NULL,
         email VARCHAR(100) NOT NULL UNIQUE,
         phone_number VARCHAR(20) UNIQUE,
-        birthdate DATE NOT NULL,
+        birthdate DATE,
         img_path VARCHAR(100) UNIQUE,
         premium BOOLEAN NOT NULL DEFAULT false,
         admin BOOLEAN NOT NULL DEFAULT false,

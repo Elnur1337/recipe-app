@@ -14,52 +14,68 @@ const registerUser = async (req, res) => {
     const { firstName, lastName, username, password, email, phonePrefix, phoneNumber, birthYear, birthMonth, birthDay } = req.body;
     let phone = '';
     if (firstName.length < 2 || firstName.length > 100) {
-        return res.status(422).json({errorMsg: 'First name must be at least 2 characters long!'});
+        return res.status(422).json({errorMsg: 'First name must be at least 2 characters long!', field: 'firstName'});
     }
     for (let counter = 0; counter < firstName.length; counter++) {
-            const asciiCode = firstName.charCodeAt(counter);
-            if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
-                return res.status(422).json({errorMsg: "First name can only contain letters, space character and symbols (-, .,')!"});
-            } 
-        }
+        const asciiCode = firstName.charCodeAt(counter);
+        if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
+            return res.status(422).json({errorMsg: "First name can only contain letters, space character and symbols (-, .,')!", field: 'firstName'});
+        } 
+    }
     if (lastName.length < 2 || lastName.length > 100) {
-            return res.status(422).json({errorMsg: 'Last name must be at least 2 characters long!'});
-        }
+        return res.status(422).json({errorMsg: 'Last name must be at least 2 characters long!', field: 'lastName'});
+    }
     for (let counter = 0; counter < lastName.length; counter++) {
-            const asciiCode = lastName.charCodeAt(counter);
-            if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
-                return res.status(422).json({errorMsg: "Last name can only contain letters, space character and symbols (-, .,')!"});
-            } 
-        }
+        const asciiCode = lastName.charCodeAt(counter);
+        if (asciiCode !== 32 && asciiCode !== 39 && asciiCode !== 45 && asciiCode !== 46 && asciiCode !== 352 && asciiCode !== 353 && asciiCode !== 268 && asciiCode !== 269 && asciiCode !== 262 && asciiCode !== 263 && asciiCode !== 272 && asciiCode !== 273 && asciiCode !== 381 && asciiCode !== 382 && !(asciiCode > 64 && asciiCode < 91) && !(asciiCode > 96 && asciiCode < 123)) {
+            return res.status(422).json({errorMsg: "Last name can only contain letters, space character and symbols (-, .,')!", field: 'lastName'});
+        } 
+    }
     if(username.length < 2 || username.length > 20) {
-            return res.status(422).json({errorMsg: 'Username must be between 2 and 20 characters!'});
+        return res.status(422).json({errorMsg: 'Username must be between 2 and 20 characters!', field: 'username'});
+    }
+    for (let counter = 0; counter < username.length; counter++) {
+        const asciiCode = username.charCodeAt(counter);
+        if (asciiCode === 59) {
+            return res.status(422).json({errorMsg: "Username can't contain semicolon!", field: 'username'});
         }
+    }
     if (password.length < 8) {
-            return res.status(422).json({errorMsg: 'Password must be at least 8 characters long!'});
+        return res.status(422).json({errorMsg: 'Password must be at least 8 characters long!', field: 'password'});
+    }
+    for (let counter = 0; counter < password.length; counter++) {
+        const asciiCode = password.charCodeAt(counter);
+        if (asciiCode === 59) {
+            return res.status(422).json({errorMsg: "Password can't contain semicolon!", field: 'password'});
         }
+    }
     const mailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     if (!email.match(mailRegex)) {
-        return res.status(422).json({errorMsg: 'Email addres is not valid!'});
+        return res.status(422).json({errorMsg: 'Email addres is not valid!', field: 'email'});
     }
     if (phoneNumber.length > 0) {
-            if (phoneNumber.length < 15) {
-                for (let counter = 0; counter < phoneNumber.length; counter++) {
-                    const asciiCode = phoneNumber.charCodeAt(counter);
-                    if (!(asciiCode > 47 && asciiCode < 58)) {
-                        return res.status(422).json({errorMsg: 'Phone number can only contain numbers!'});
-                    } else {
-                        phone = phonePrefix + phoneNumber;
-                    }
-            }
-            } else {
-                    return res.status(422).json({errorMsg: "Phone number can't be longer then 20 characters!"});
+        if (phoneNumber.length < 15) {
+            for (let counter = 0; counter < phoneNumber.length; counter++) {
+                const asciiCode = phoneNumber.charCodeAt(counter);
+                if (!(asciiCode > 47 && asciiCode < 58)) {
+                    return res.status(422).json({errorMsg: 'Phone number can only contain numbers!', field: 'phoneNumber'});
+                } else {
+                    phone = phonePrefix + phoneNumber;
                 }
+            }
+        } else {
+                return res.status(422).json({errorMsg: "Phone number can't be longer then 20 characters!", field: 'phoneNumber'});
+            }
                 
+    }
+    let birthDate;
+    if (birthDay === '00' || birthMonth === '00' || birthYear === '0000') {
+        birthDate === null;
+    } else if (!dayjs(`${birthYear}-${birthMonth}-${birthDay}`, 'YYYY-MM-DD', true).isValid()) {
+            return res.status(422).json({errorMsg: 'Date you entered is not valid!', field: 'birthDate'});
+        } else {
+            birthDate = new Date(Number(birthYear), Number(birthMonth) - 1, Number(birthDay));
         }
-    if (!dayjs(`${birthYear}-${birthMonth}-${birthDay}`, 'YYYY-MM-DD', true).isValid()) {
-            return res.status(422).json({errorMsg: 'Date you entered is not valid!'});
-        }
-    const birthDate = new Date(Number(birthYear), Number(birthMonth) - 1, Number(birthDay));
     const hashedPassword = await hash(password, 10);
     const query = `INSERT INTO users(first_name, last_name, username, password, email, phone_number, birthdate) VALUES (?, ?, ?, ?, ?, ${phone.length > 0 ? phone : null}, ?)`;
     database.query(query, [firstName, lastName, username, hashedPassword, email, birthDate], err => {
@@ -74,7 +90,7 @@ const registerUser = async (req, res) => {
                 } else {
                     error = 'Account with that phone number already exists!';
                 }
-                return res.status(409).json({errorMsg: error});
+                return res.status(409).json({errorMsg: error, field: dupField});
             }
         } else {
             const timestamp = dayjs().$d.toString().slice(4, 24);

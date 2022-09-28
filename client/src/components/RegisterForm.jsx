@@ -18,16 +18,16 @@ const RegisterForm = () => {
     const [email, setEmail] = useState({value: '', isValid: false});
     const [phonePrefix, setPhonePrefix] = useState('+387');
     const [phoneNumber, setPhoneNumber] = useState({value: '', isValid: false});
-    const [birthDay, setBirthDay] = useState({value: '01', isValid: true});
-    const [birthMonth, setBirthMonth] = useState({value: '01', isValid: true});
-    const [birthYear, setBirthYear] = useState({value: '2022', isValid: true});
+    const [birthDay, setBirthDay] = useState({value: '00', isValid: true});
+    const [birthMonth, setBirthMonth] = useState({value: '00', isValid: true});
+    const [birthYear, setBirthYear] = useState({value: '0000', isValid: true});
 
     //States
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [message, setMessage] = useState({msg: '', type: ''});
+    const [isMessageShown, setIsMessageShown] = useState(false);
     
     const isFirstNameValid = () => {
-        console.log(firstName);
         if (firstName.value.length < 2 || firstName.value.length > 100) {
             setFirstName({...firstName, isValid: false});
             return setMessage({msg: 'First name must be at least 2 characters long!', type: 'error'});
@@ -62,6 +62,13 @@ const RegisterForm = () => {
             setUsername({...username, isValid: false});
             return setMessage({msg: 'Username must be between 2 and 20 characters!', type: 'error'});
         }
+        for (let counter = 0; counter < username.value.length; counter++) {
+            const asciiCode = username.value.charCodeAt(counter);
+            if (asciiCode === 59) {
+                setUsername({...username, isValid: false});
+                return setMessage({msg: "Username can't contain semicolon!", type: 'error'});
+            }
+        }
         return setUsername({...username, isValid: true});
     }
 
@@ -69,6 +76,13 @@ const RegisterForm = () => {
         if (password.value.length < 8) {
             setPassword({...password, isValid: false});
             return setMessage({msg: 'Password must be at least 8 characters long!', type: 'error'});
+        }
+        for (let counter = 0; counter < password.value.length; counter++) {
+            const asciiCode = password.value.charCodeAt(counter);
+            if (asciiCode === 59) {
+                setPassword({...password, isValid: false});
+                return setMessage({msg: "Password can't contain semicolon!", type: 'error'});
+            }
         }
         return setPassword({...password, isValid: true});
     }
@@ -101,7 +115,11 @@ const RegisterForm = () => {
     }
 
     const isBirthDateValid = () => {
-        if (!dayjs(`${birthYear.value}-${birthMonth.value}-${birthDay.value}`, 'YYYY-MM-DD', true).isValid()) {
+        if (birthDay.value === '00' || birthMonth.value === '00' || birthYear.value === '0000') {
+            setBirthDay({...birthDay, isValid: true});
+            setBirthMonth({...birthMonth, isValid: true});
+            return setBirthYear({...birthYear, isValid: true});
+        } else if (!dayjs(`${birthYear.value}-${birthMonth.value}-${birthDay.value}`, 'YYYY-MM-DD', true).isValid()) {
             setBirthDay({...birthDay, isValid: false});
             setBirthMonth({...birthMonth, isValid: false});
             setBirthYear({...birthYear, isValid: false});
@@ -114,25 +132,69 @@ const RegisterForm = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        try {
-            const res = await axios.post('/register', {
-                firstName,
-                lastName,
-                username,
-                password,
-                email,
-                phonePrefix,
-                phoneNumber,
-                birthYear,
-                birthMonth,
-                birthDay
-            });
-            console.log(res);
-            return setMessage({msg: res.data.msg, type: 'success'});
-        } catch (err) {
-            return setMessage({msg: err.response.data.errorMsg, type: 'error'});  
+        isFirstNameValid();
+        isLastNameValid();
+        isUsernameValid();
+        isPasswordValid();
+        isEmailValid();
+        isPhoneNumberValid();
+        isBirthDateValid();
+        if (firstName.isValid && lastName.isValid && username.isValid && password.isValid && email.isValid && phoneNumber.isValid && birthDay.isValid && birthMonth.isValid && birthYear.isValid) {
+            try {
+                const res = await axios.post('/register', {
+                    firstName: firstName.value,
+                    lastName: lastName.value,
+                    username: username.value,
+                    password: password.value,
+                    email: email.value,
+                    phonePrefix,
+                    phoneNumber: phoneNumber.value,
+                    birthYear: birthYear.value,
+                    birthMonth: birthMonth.value,
+                    birthDay: birthDay.value
+                });
+                return setMessage({msg: res.data.msg, type: 'success'});
+            } catch (err) {
+                switch (err.response.data.field) {
+                    case 'firstName':
+                        setFirstName({...firstName, isValid: false});
+                        break;
+                    case 'lastName':
+                        setLastName({...lastName, isValid: false});
+                        break;
+                    case 'username':
+                        setUsername({...username, isValid: false});
+                        break;
+                    case 'password':
+                        setPassword({...password, isValid: false});
+                        break;
+                    case 'email':
+                        setEmail({...email, isValid: false});
+                        break;
+                    case 'phoneNumber':
+                        setPhoneNumber({...phoneNumber, isValid: false});
+                        break;
+                    case 'birthDate':
+                        setBirthDay({...birthDay, isValid: false});
+                        setBirthMonth({...birthMonth, isValid: false});
+                        setBirthYear({...birthYear, isValid: false});
+                        break;
+                    default:
+                        break;
+                }
+                return setMessage({msg: err.response.data.errorMsg, type: 'error'});  
+            }
         }
     }
+
+    useEffect(() => {
+        setIsMessageShown(true);
+        const timeout = setTimeout(() => {
+            setIsMessageShown(false);
+            return () => clearTimeout(timeout);
+        }, 5000);
+    }, [message]);
+
     return (
         <form autoComplete="off" onSubmit={submitHandler}>
             <h2>Registration</h2>
@@ -170,11 +232,12 @@ const RegisterForm = () => {
                 </div>
             </div>
             <div className="formVerticalContainer">
-                <p className="pLabel">Birth date:*</p>
+                <p className="pLabel">Birth date:</p>
                 <div className="formHorizontalContainer">
                     <div className="formControl">
                         <label htmlFor="birthdateDay">Day:</label>
-                        <select name="birthdateDay" id="birthdateDay" className={birthDay.value ? (!birthDay.isValid ? 'invalidInput' : undefined) : 'input'} required value={birthDay.value} onChange={(e) => setBirthDay({...birthDay, value: e.target.value})} onBlur={isBirthDateValid}>
+                        <select name="birthdateDay" id="birthdateDay" className={birthDay.value ? (!birthDay.isValid ? 'invalidInput' : undefined) : 'input'} value={birthDay.value} onChange={(e) => setBirthDay({...birthDay, value: e.target.value})} onBlur={isBirthDateValid}>
+                            <option value="00">Not telling</option>
                             <option value="01">1</option>
                             <option value="02">2</option>
                             <option value="03">3</option>
@@ -210,7 +273,8 @@ const RegisterForm = () => {
                     </div>
                     <div className="formControl">
                         <label htmlFor="birthdateMonth">Month:</label>
-                        <select name="birthdateMonth" id="birthdateMonth" className={birthMonth.value ? (!birthMonth.isValid ? 'invalidInput' : undefined) : 'input'} required value={birthMonth.value} onChange={(e) => setBirthMonth({...birthMonth, value: e.target.value})} onBlur={isBirthDateValid}>
+                        <select name="birthdateMonth" id="birthdateMonth" className={birthMonth.value ? (!birthMonth.isValid ? 'invalidInput' : undefined) : 'input'} value={birthMonth.value} onChange={(e) => setBirthMonth({...birthMonth, value: e.target.value})} onBlur={isBirthDateValid}>
+                            <option value="00">Not telling</option>
                             <option value="01">January</option>
                             <option value="02">February</option>
                             <option value="03">March</option>
@@ -227,7 +291,8 @@ const RegisterForm = () => {
                     </div>
                     <div className="formControl">
                         <label htmlFor="birthdateYear">Year:</label>
-                        <select name="birthdateYear" id="birthdateYear" className={birthYear.value ? (!birthYear.isValid ? 'invalidInput' : undefined) : 'input'} required value={birthYear.value} onChange={(e) => setBirthYear({...birthYear, value: e.target.value})} onBlur={isBirthDateValid}>
+                        <select name="birthdateYear" id="birthdateYear" className={birthYear.value ? (!birthYear.isValid ? 'invalidInput' : undefined) : 'input'} value={birthYear.value} onChange={(e) => setBirthYear({...birthYear, value: e.target.value})} onBlur={isBirthDateValid}>
+                            <option value="0000">Not telling</option>
                             <option value="2022">2022</option>
                             <option value="2021">2021</option>
                             <option value="2020">2020</option>
@@ -334,7 +399,7 @@ const RegisterForm = () => {
                 </div>
             </div>
             <input type="submit" value="Register" />
-            <p className="message">{message.msg}</p>
+            {isMessageShown && <p className={message.type === 'success' ? 'message successMsg' : 'message errorMsg'}>{message.msg}</p>}
         </form>
     );
 }
